@@ -20,8 +20,10 @@
   "homepage": "https://github.com/oli-drew/mysql-employee-tracker-bootcamp-hw12#readme",
   "dependencies": {
     "chalk": "^4.1.0",
+    "console.table": "^0.10.0",
     "figlet": "^1.5.2",
     "inquirer": "^8.2.1",
-    "jest": "^27.5.1"
+    "jest": "^27.5.1",
+    "mysql2": "^2.3.3"
   }
 }

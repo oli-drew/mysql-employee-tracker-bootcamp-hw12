@@ -17,21 +17,6 @@ const db = mysql.createConnection(
   console.log(`Connected to the company_db database.`)
 );
 
-// Query database
-db.query("SELECT * FROM department", function (err, results) {
-  console.log(results);
-});
-
-// Query database
-db.query("SELECT * FROM role", function (err, results) {
-  console.log(results);
-});
-
-// Query database
-db.query("SELECT * FROM employee", function (err, results) {
-  console.log(results);
-});
-
 // Exit application
 const exitGenerator = (message) => {
   console.log(
@@ -93,4 +78,18 @@ applicationIntro();
 // Do stuff here
 const init = () => {
   console.log("let's go!!!");
+  // Query database
+  db.query("SELECT * FROM department", function (err, results) {
+    console.log(results);
+  });
+
+  // Query database
+  db.query("SELECT * FROM role", function (err, results) {
+    console.log(results);
+  });
+
+  // Query database
+  db.query("SELECT * FROM employee", function (err, results) {
+    console.log(results);
+  });
 };
