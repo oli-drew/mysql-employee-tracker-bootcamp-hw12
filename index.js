@@ -3,6 +3,34 @@ const inquirer = require("inquirer");
 // const fs = require("fs");
 const chalk = require("chalk");
 const figlet = require("figlet");
+// Import and require mysql2
+const mysql = require("mysql2");
+
+// Connect to the database
+const db = mysql.createConnection(
+  {
+    host: "localhost",
+    user: "root",
+    password: "password",
+    database: "company_db",
+  },
+  console.log(`Connected to the company_db database.`)
+);
+
+// Query database
+db.query("SELECT * FROM department", function (err, results) {
+  console.log(results);
+});
+
+// Query database
+db.query("SELECT * FROM role", function (err, results) {
+  console.log(results);
+});
+
+// Query database
+db.query("SELECT * FROM employee", function (err, results) {
+  console.log(results);
+});
 
 // Exit application
 const exitGenerator = (message) => {
@@ -53,7 +81,7 @@ const applicationIntro = () => {
   );
   console.log(
     chalk.bgGreen.bold.white(
-      "----- View and manage the departments, roles, and employees in a company -----",
+      "------- View and manage the departments, roles, and employees in a company -------",
       "\n"
     )
   );
