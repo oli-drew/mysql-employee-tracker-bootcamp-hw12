@@ -213,67 +213,33 @@ const createDepartment = (name) => {
   );
 };
 
-// // Make an array of departments
-// const departmentArr = () => {
-//   let departmentsArray = [];
-//   db.query(`SELECT * FROM department`, function (err, results) {
-//     departmentsArray = results.map((department) => ({
-//       name: department.name,
-//       id: department.id,
-//     }));
-//     return departmentsArray;
-//   });
-// };
-
 // Add a role
 const addRole = () => {
-  // Get the departments
-  let departmentsArray = [];
-  db.query(`SELECT * FROM department`, function (err, results) {
-    departmentsArray = results.map((department) => ({
-      name: department.name,
-      id: department.id,
-    }));
-    // Prompt user
-    inquirer
-      .prompt([
-        {
-          type: "input",
-          name: "name",
-          message: "Please enter the name of the role:",
-        },
-        {
-          type: "input",
-          name: "salary",
-          message: "Please enter a salary:",
-        },
-        {
-          type: "list",
-          name: "department",
-          choices: departmentsArray,
-          message: "Please assign the role to a department",
-        },
-      ])
-      .then((answers) => {
-        let departmentId = 0;
-        departmentsArray.forEach((dept) => {
-          if (answers.department === dept.name) {
-            departmentId = dept.id;
-          }
-        });
-        createRole(answers.name, answers.salary, departmentId);
-      });
-  });
+  // Prompt user
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "name",
+        message: "Please enter the name of the role:",
+      },
+      {
+        type: "input",
+        name: "salary",
+        message: "Please enter a salary:",
+      },
+      {
+        type: "list",
+        name: "department",
+        choices: createDepartmentArray(),
+        message: "Please assign the role to a department",
+      },
+    ])
+    .then((answers) => {
+      let departmentId = answers.department.split(":")[0];
+      createRole(answers.name, answers.salary, departmentId);
+    });
 };
-
-// Department ID from name
-// const departmentID = (deptName, deptArr) => {
-//   deptArr.forEach((dept) => {
-//     if (deptName === dept.name) {
-//       return dept.id;
-//     }
-//   });
-// };
 
 // Create a new role in the database
 const createRole = (name, salary, department) => {
@@ -321,22 +287,9 @@ const addEmployee = () => {
     ])
     .then((answers) => {
       // Role ID
-      let roleId = 1;
-      // let rolesArr = createRoleArray();
-      // console.log(rolesArr);
-      // rolesArr.forEach((role) => {
-      //   if (answers.role === role.title) {
-      //     roleId = role.id;
-      //   }
-      // });
+      let roleId = answers.role.split(":")[0];
       // Manager ID
-      let managerId = 1;
-      let managerArr = createManagerArray();
-      // managerArr.forEach((manager) => {
-      //   if (answers.manager === `${manager.first_name} ${manager.last_name}`) {
-      //     managerId = manager.id;
-      //   }
-      // });
+      let managerId = answers.manager.split(":")[0];
       createEmployee(answers.firstName, answers.lastName, roleId, managerId);
     });
 };
@@ -362,24 +315,23 @@ const createEmployee = (first_name, last_name, role_id, manager_id) => {
   );
 };
 
-// // Make array of roles
-// const createDepartmentArray = () => {
-//   const departmentArray = [];
-//   db.query(`SELECT * FROM department`, function (err, results) {
-//     departmentsArray = results.map((department) => ({
-//       name: department.name,
-//       id: department.id,
-//     }));
-//   });
-//   return departmentArray;
-// };
+// Make array of departments
+const createDepartmentArray = () => {
+  const departmentArray = [];
+  db.query(`SELECT * FROM department`, function (err, results) {
+    results.forEach((department) => {
+      departmentArray.push(`${department.id}: ${department.name}`);
+    });
+  });
+  return departmentArray;
+};
 
 // Make array of roles
 const createRoleArray = () => {
   const roleArray = [];
   db.query(`SELECT id, title FROM role`, function (err, results) {
     results.forEach((job) => {
-      roleArray.push(job.title);
+      roleArray.push(`${job.id}: ${job.title}`);
     });
   });
   return roleArray;
@@ -390,7 +342,9 @@ const createManagerArray = () => {
   const managerArray = [];
   db.query(`SELECT * FROM employee`, function (err, results) {
     results.forEach((employee) => {
-      managerArray.push(`${employee.first_name} ${employee.last_name}`);
+      managerArray.push(
+        `${employee.id}: ${employee.first_name} ${employee.last_name}`
+      );
     });
   });
   return managerArray;
