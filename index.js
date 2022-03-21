@@ -161,7 +161,20 @@ const viewRoles = () => {
 
 // View all employees
 const viewEmployees = () => {
-  //
+  console.log(chalk.green.bold("All Employees:"));
+  // Query all records in employee table
+  db.query(
+    `SELECT em.id, em.first_name, em.last_name, role.title, role.salary, department.name AS department,CONCAT(man.first_name, ' ', man.last_name) AS manager
+    FROM employee em
+    LEFT JOIN role ON em.role_id = role.id
+    LEFT JOIN department ON role.department_id = department.id
+    LEFT JOIN employee man ON em.manager_id = man.id`,
+    function (err, results) {
+      console.table(results);
+      // Show main menu
+      mainMenu();
+    }
+  );
 };
 
 // Add a department
