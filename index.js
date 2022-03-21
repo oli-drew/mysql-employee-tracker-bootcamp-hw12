@@ -107,7 +107,7 @@ const menuQuestions = () => {
         "Update an employee role",
         "Exit",
       ],
-      message: "How can I help?",
+      message: chalk.bgGreen.bold.white("Main menu:"),
     },
   ]);
 };
@@ -134,7 +134,7 @@ function menuResponse(answers) {
 
 // View all departments
 const viewDepartments = () => {
-  console.log(chalk.green.bold("All Departments:"));
+  console.log(chalk.green.bold("All Departments:", "\n"));
   // Query all records in department table
   db.query(`SELECT * FROM department`, function (err, results) {
     console.table(results);
@@ -145,7 +145,7 @@ const viewDepartments = () => {
 
 // View all roles
 const viewRoles = () => {
-  console.log(chalk.green.bold("All Roles:"));
+  console.log(chalk.green.bold("All Roles:", "\n"));
   // Query all records in role table
   db.query(
     `SELECT role.id, title, salary, department.name AS department
@@ -161,7 +161,7 @@ const viewRoles = () => {
 
 // View all employees
 const viewEmployees = () => {
-  console.log(chalk.green.bold("All Employees:"));
+  console.log(chalk.green.bold("All Employees:", "\n"));
   // Query all records in employee table
   db.query(
     `SELECT em.id, em.first_name, em.last_name, role.title, role.salary, department.name AS department,CONCAT(man.first_name, ' ', man.last_name) AS manager
@@ -179,7 +179,25 @@ const viewEmployees = () => {
 
 // Add a department
 const addDepartment = () => {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "name",
+        message: "What is the new department called?",
+      },
+    ])
+    .then((answers) => {
+      createDepartment(answers.name);
+    });
+};
+
+// Create a new department in the database
+const createDepartment = (name) => {
   //
+  console.log(`Department ${name} created`);
+  // Show main menu
+  mainMenu();
 };
 
 // Add a role
@@ -208,19 +226,3 @@ const updateEmployeeRole = () => {
 // Delete employee
 
 // View total utilized budget of a department
-
-//
-// Query database
-// db.query("SELECT * FROM department", function (err, results) {
-//   console.log(results);
-// });
-
-// // Query database
-// db.query("SELECT * FROM role", function (err, results) {
-//   console.log(results);
-// });
-
-// // Query database
-// db.query("SELECT * FROM employee", function (err, results) {
-//   console.log(results);
-// });
