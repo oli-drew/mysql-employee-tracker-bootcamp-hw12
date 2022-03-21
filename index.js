@@ -266,6 +266,15 @@ const addRole = () => {
   });
 };
 
+// Department ID from name
+// const departmentID = (deptName, deptArr) => {
+//   deptArr.forEach((dept) => {
+//     if (deptName === dept.name) {
+//       return dept.id;
+//     }
+//   });
+// };
+
 // Create a new role in the database
 const createRole = (name, salary, department) => {
   db.query(
@@ -285,6 +294,106 @@ const createRole = (name, salary, department) => {
 // Add employee
 const addEmployee = () => {
   //
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "firstName",
+        message: "Please enter the employee's first name:",
+      },
+      {
+        type: "input",
+        name: "lastName",
+        message: "Please enter the employee's last name:",
+      },
+      {
+        type: "list",
+        name: "role",
+        message: "What is the employee's role?",
+        choices: createRoleArray(),
+      },
+      {
+        type: "list",
+        name: "manager",
+        message: "Who is the employee's manager?",
+        choices: createManagerArray(),
+      },
+    ])
+    .then((answers) => {
+      // Role ID
+      let roleId = 1;
+      // let rolesArr = createRoleArray();
+      // console.log(rolesArr);
+      // rolesArr.forEach((role) => {
+      //   if (answers.role === role.title) {
+      //     roleId = role.id;
+      //   }
+      // });
+      // Manager ID
+      let managerId = 1;
+      let managerArr = createManagerArray();
+      // managerArr.forEach((manager) => {
+      //   if (answers.manager === `${manager.first_name} ${manager.last_name}`) {
+      //     managerId = manager.id;
+      //   }
+      // });
+      createEmployee(answers.firstName, answers.lastName, roleId, managerId);
+    });
+};
+
+// Create a new role in the database
+const createEmployee = (first_name, last_name, role_id, manager_id) => {
+  db.query(
+    "INSERT INTO employee SET ?",
+    new Employee(first_name, last_name, role_id, manager_id),
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      }
+      console.log(
+        chalk.green.bold(
+          `Employee called ${first_name} ${last_name} created`,
+          "\n"
+        )
+      );
+      // Show main menu
+      mainMenu();
+    }
+  );
+};
+
+// // Make array of roles
+// const createDepartmentArray = () => {
+//   const departmentArray = [];
+//   db.query(`SELECT * FROM department`, function (err, results) {
+//     departmentsArray = results.map((department) => ({
+//       name: department.name,
+//       id: department.id,
+//     }));
+//   });
+//   return departmentArray;
+// };
+
+// Make array of roles
+const createRoleArray = () => {
+  const roleArray = [];
+  db.query(`SELECT id, title FROM role`, function (err, results) {
+    results.forEach((job) => {
+      roleArray.push(job.title);
+    });
+  });
+  return roleArray;
+};
+
+// Make array of roles
+const createManagerArray = () => {
+  const managerArray = [];
+  db.query(`SELECT * FROM employee`, function (err, results) {
+    results.forEach((employee) => {
+      managerArray.push(`${employee.first_name} ${employee.last_name}`);
+    });
+  });
+  return managerArray;
 };
 
 // Update an employee role
