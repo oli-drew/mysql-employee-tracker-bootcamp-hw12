@@ -28,6 +28,7 @@ const exitGenerator = (message) => {
       })
     )
   );
+  process.exit();
 };
 
 // Ask the user if they would like to start or exit
@@ -81,8 +82,15 @@ const init = () => {
   mainMenu();
 };
 
-// Main Menu
+//
 const mainMenu = () => {
+  menuQuestions()
+    .then(menuResponse)
+    .catch((err) => console.error(err));
+};
+
+// Main Menu questions
+const menuQuestions = () => {
   return inquirer.prompt([
     {
       type: "list",
@@ -102,9 +110,32 @@ const mainMenu = () => {
   ]);
 };
 
+// Main menu user request
+function menuResponse(answers) {
+  const answer = answers.mainOptions;
+  if (answer === "View all departments") {
+    viewDepartments();
+  } else if (answer === "View all roles") {
+    viewRoles();
+  } else if (answer === "View all employees") {
+    viewEmployees();
+  } else if (answer === "Add a department") {
+    addDepartment();
+  } else if (answer === "Add a role") {
+    addRole();
+  } else if (answer === "Add an employee") {
+    addEmployee();
+  } else if (answer === "Update an employee role") {
+    updateEmployeeRole();
+  } else exitGenerator("See you soon!");
+}
+
 // View all departments
 const viewDepartments = () => {
   //
+  console.log("All departments");
+  // Show main menu
+  mainMenu();
 };
 
 // View all roles
