@@ -10,6 +10,8 @@ const cTable = require("console.table");
 
 // Require classes
 const Department = require("./lib/Department");
+const Role = require("./lib/Role");
+const Employee = require("./lib/Employee");
 
 // Connect to the database
 const db = mysql.createConnection(
@@ -204,16 +206,80 @@ const createDepartment = (name) => {
       if (err) {
         console.log(err);
       }
-      console.log(`Department ${name} created`, "\n");
+      console.log(chalk.green.bold(`Department called ${name} created`, "\n"));
       // Show main menu
       mainMenu();
     }
   );
 };
 
+// // Make an array of departments
+// const departmentArr = () => {
+//   let departmentsArray = [];
+//   db.query(`SELECT * FROM department`, function (err, results) {
+//     departmentsArray = results.map((department) => ({
+//       name: department.name,
+//       id: department.id,
+//     }));
+//     return departmentsArray;
+//   });
+// };
+
 // Add a role
 const addRole = () => {
-  //
+  // Get the departments
+  let departmentsArray = [];
+  db.query(`SELECT * FROM department`, function (err, results) {
+    departmentsArray = results.map((department) => ({
+      name: department.name,
+      id: department.id,
+    }));
+    // Prompt user
+    inquirer
+      .prompt([
+        {
+          type: "input",
+          name: "name",
+          message: "Please enter the name of the role:",
+        },
+        {
+          type: "input",
+          name: "salary",
+          message: "Please enter a salary:",
+        },
+        {
+          type: "list",
+          name: "department",
+          choices: departmentsArray,
+          message: "Please assign the role to a department",
+        },
+      ])
+      .then((answers) => {
+        let departmentId = 0;
+        departmentsArray.forEach((dept) => {
+          if (answers.department === dept.name) {
+            departmentId = dept.id;
+          }
+        });
+        createRole(answers.name, answers.salary, departmentId);
+      });
+  });
+};
+
+// Create a new role in the database
+const createRole = (name, salary, department) => {
+  db.query(
+    "INSERT INTO role SET ?",
+    new Role(name, salary, department),
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      }
+      console.log(chalk.green.bold(`Role called ${name} created`, "\n"));
+      // Show main menu
+      mainMenu();
+    }
+  );
 };
 
 // Add employee
