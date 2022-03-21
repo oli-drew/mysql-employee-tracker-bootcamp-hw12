@@ -8,6 +8,9 @@ const mysql = require("mysql2");
 // Console Tables
 const cTable = require("console.table");
 
+// Require classes
+const Department = require("./lib/Department");
+
 // Connect to the database
 const db = mysql.createConnection(
   {
@@ -194,10 +197,18 @@ const addDepartment = () => {
 
 // Create a new department in the database
 const createDepartment = (name) => {
-  //
-  console.log(`Department ${name} created`);
-  // Show main menu
-  mainMenu();
+  db.query(
+    "INSERT INTO department SET ?",
+    new Department(name),
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      }
+      console.log(`Department ${name} created`, "\n");
+      // Show main menu
+      mainMenu();
+    }
+  );
 };
 
 // Add a role
