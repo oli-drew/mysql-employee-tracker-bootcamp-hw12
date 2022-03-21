@@ -135,7 +135,7 @@ function menuResponse(answers) {
 // View all departments
 const viewDepartments = () => {
   console.log(chalk.green.bold("All Departments:"));
-  // Query all records in departments table
+  // Query all records in department table
   db.query(`SELECT * FROM department`, function (err, results) {
     console.table(results);
     // Show main menu
@@ -145,7 +145,18 @@ const viewDepartments = () => {
 
 // View all roles
 const viewRoles = () => {
-  //
+  console.log(chalk.green.bold("All Roles:"));
+  // Query all records in role table
+  db.query(
+    `SELECT role.id, title, salary, department.name AS department
+  FROM role 
+  JOIN department ON role.department_id = department.id`,
+    function (err, results) {
+      console.table(results);
+      // Show main menu
+      mainMenu();
+    }
+  );
 };
 
 // View all employees
