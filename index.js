@@ -5,6 +5,8 @@ const chalk = require("chalk");
 const figlet = require("figlet");
 // Import and require mysql2
 const mysql = require("mysql2");
+// Console Tables
+const cTable = require("console.table");
 
 // Connect to the database
 const db = mysql.createConnection(
@@ -132,10 +134,13 @@ function menuResponse(answers) {
 
 // View all departments
 const viewDepartments = () => {
-  //
-  console.log("All departments");
-  // Show main menu
-  mainMenu();
+  console.log(chalk.green.bold("All Departments:"));
+  // Query all records in departments table
+  db.query(`SELECT * FROM department`, function (err, results) {
+    console.table(results);
+    // Show main menu
+    mainMenu();
+  });
 };
 
 // View all roles
