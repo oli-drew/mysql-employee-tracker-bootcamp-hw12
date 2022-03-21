@@ -21,6 +21,7 @@
   "dependencies": {
     "chalk": "^4.1.0",
     "console.table": "^0.10.0",
+    "dotenv": "^16.0.0",
     "figlet": "^1.5.2",
     "inquirer": "^8.2.1",
     "jest": "^27.5.1",

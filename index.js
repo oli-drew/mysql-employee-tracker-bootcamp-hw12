@@ -77,19 +77,90 @@ applicationIntro();
 
 // Do stuff here
 const init = () => {
-  console.log("let's go!!!");
-  // Query database
-  db.query("SELECT * FROM department", function (err, results) {
-    console.log(results);
-  });
-
-  // Query database
-  db.query("SELECT * FROM role", function (err, results) {
-    console.log(results);
-  });
-
-  // Query database
-  db.query("SELECT * FROM employee", function (err, results) {
-    console.log(results);
-  });
+  // console.log("let's go!!!");
+  mainMenu();
 };
+
+// Main Menu
+const mainMenu = () => {
+  return inquirer.prompt([
+    {
+      type: "list",
+      name: "mainOptions",
+      choices: [
+        "View all departments",
+        "View all roles",
+        "View all employees",
+        "Add a department",
+        "Add a role",
+        "Add an employee",
+        "Update an employee role",
+        "Exit",
+      ],
+      message: "How can I help?",
+    },
+  ]);
+};
+
+// View all departments
+const viewDepartments = () => {
+  //
+};
+
+// View all roles
+const viewRoles = () => {
+  //
+};
+
+// View all employees
+const viewEmployees = () => {
+  //
+};
+
+// Add a department
+const addDepartment = () => {
+  //
+};
+
+// Add a role
+const addRole = () => {
+  //
+};
+
+// Add employee
+const addEmployee = () => {
+  //
+};
+
+// Update an employee role
+const updateEmployeeRole = () => {
+  //
+};
+
+// Update employee manager
+
+// View employees by manager
+
+// Delete department
+
+// Delete role
+
+// Delete employee
+
+// View total utilized budget of a department
+
+//
+// Query database
+// db.query("SELECT * FROM department", function (err, results) {
+//   console.log(results);
+// });
+
+// // Query database
+// db.query("SELECT * FROM role", function (err, results) {
+//   console.log(results);
+// });
+
+// // Query database
+// db.query("SELECT * FROM employee", function (err, results) {
+//   console.log(results);
+// });
