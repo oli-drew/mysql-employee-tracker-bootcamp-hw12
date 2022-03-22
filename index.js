@@ -465,7 +465,10 @@ const departmentBudget = (id) => {
       data.forEach((employee) => {
         budget += parseInt(employee.salary);
       });
-      console.log(chalk.green.bold(`Current expenditure: £${budget}`), "\n");
+      console.log(
+        chalk.green.bold(`Current expenditure of this department: £${budget}`),
+        "\n"
+      );
       // Show main menu
       mainMenu();
     }
@@ -474,20 +477,23 @@ const departmentBudget = (id) => {
 
 // Role budget
 const roleBudget = (id) => {
-  console.log(
-    chalk.yellow.bold("Please upgrade to premium to unlock this feature"),
-    "\n"
+  db.query(
+    `SELECT r.salary FROM employee e
+    JOIN role r ON e.role_id = r.id WHERE ?`,
+    { "r.id": id },
+    (err, data) => {
+      if (err) throw err;
+      // Calculate budget used
+      let budget = 0;
+      data.forEach((employee) => {
+        budget += parseInt(employee.salary);
+      });
+      console.log(
+        chalk.green.bold(`Current expenditure for this role: £${budget}`),
+        "\n"
+      );
+      // Show main menu
+      mainMenu();
+    }
   );
-  // Show main menu
-  mainMenu();
 };
-
-// Update employee manager
-
-// View employees by manager
-
-// Delete department
-
-// Delete role
-
-// Delete employee
