@@ -109,6 +109,7 @@ const menuQuestions = () => {
         "Add a role",
         "Add an employee",
         "Update an employee role",
+        "View budget",
         "Exit",
       ],
       message: chalk.bgGreen.bold.white("Main menu:"),
@@ -133,6 +134,8 @@ function menuResponse(answers) {
     addEmployee();
   } else if (answer === "Update an employee role") {
     updateEmployeeRole();
+  } else if (answer === "View budget") {
+    utilisedBudget();
   } else exitGenerator("See you soon!");
 }
 
@@ -412,6 +415,73 @@ const createEmployeeArray = () => {
   return employeeArray;
 };
 
+// View total utilized budget of a department or role
+const utilisedBudget = () => {
+  inquirer
+    .prompt([
+      {
+        type: "list",
+        name: "type",
+        message: "Would you like budget by Department or by Role?",
+        choices: ["Department", "Role"],
+      },
+      {
+        type: "list",
+        name: "department",
+        message: "Which department budget would you like to view?",
+        when: (answers) => answers.type === "Department",
+        choices: createDepartmentArray(),
+      },
+      {
+        type: "list",
+        name: "role",
+        message: "Which role budget would you like to view?",
+        when: (answers) => answers.type === "Role",
+        choices: createRoleArray(),
+      },
+    ])
+    .then((answers) => {
+      if (answers.type === "Department") {
+        let departmentId = answers.department.split(":")[0];
+        departmentBudget(departmentId);
+      } else if (answers.type === "Role") {
+        let roleId = answers.role.split(":")[0];
+        roleBudget(roleId);
+      }
+    });
+};
+
+// Department Budget
+const departmentBudget = (id) => {
+  db.query(
+    `SELECT r.salary FROM employee e
+    JOIN role r ON e.role_id = r.id
+    JOIN department d ON r.department_id = d.id WHERE ?`,
+    { "d.id": id },
+    (err, data) => {
+      if (err) throw err;
+      // Calculate budget used
+      let budget = 0;
+      data.forEach((employee) => {
+        budget += parseInt(employee.salary);
+      });
+      console.log(chalk.green.bold(`Current expenditure: £${budget}`), "\n");
+      // Show main menu
+      mainMenu();
+    }
+  );
+};
+
+// Role budget
+const roleBudget = (id) => {
+  console.log(
+    chalk.yellow.bold("Please upgrade to premium to unlock this feature"),
+    "\n"
+  );
+  // Show main menu
+  mainMenu();
+};
+
 // Update employee manager
 
 // View employees by manager
@@ -421,5 +491,3 @@ const createEmployeeArray = () => {
 // Delete role
 
 // Delete employee
-
-// View total utilized budget of a department
