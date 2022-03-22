@@ -85,11 +85,10 @@ applicationIntro();
 
 // Do stuff here
 const init = () => {
-  // console.log("let's go!!!");
   mainMenu();
 };
 
-//
+// Open main menu
 const mainMenu = () => {
   menuQuestions()
     .then(menuResponse)
@@ -259,7 +258,6 @@ const createRole = (name, salary, department) => {
 
 // Add employee
 const addEmployee = () => {
-  //
   inquirer
     .prompt([
       {
@@ -282,7 +280,7 @@ const addEmployee = () => {
         type: "list",
         name: "manager",
         message: "Who is the employee's manager?",
-        choices: createManagerArray(),
+        choices: createEmployeeArray(),
       },
     ])
     .then((answers) => {
@@ -315,6 +313,70 @@ const createEmployee = (first_name, last_name, role_id, manager_id) => {
   );
 };
 
+// Update an employee role
+const updateEmployeeRole = async () => {
+  inquirer
+    .prompt([
+      {
+        type: "list",
+        name: "confirm",
+        message:
+          "You are about to modify an employee's role, do you wish to continue?",
+        choices: ["Yes", "No"],
+      },
+      {
+        type: "list",
+        name: "employee",
+        message: "Which employee would you like to update?",
+        when: (answers) => answers.confirm === "Yes",
+        choices: createEmployeeArray(),
+      },
+      {
+        type: "list",
+        name: "role",
+        message: "What is their new role?",
+        when: (answers) => answers.confirm === "Yes",
+        choices: createRoleArray(),
+      },
+    ])
+    .then((answers) => {
+      if (answers.confirm === "Yes") {
+        // Employee ID
+        let employeeId = answers.employee.split(":")[0];
+        // Role ID
+        let roleId = answers.role.split(":")[0];
+        updateRole(employeeId, roleId);
+      } else {
+        // Show main menu
+        mainMenu();
+      }
+    });
+};
+
+// Push role change to database
+function updateRole(employeeId, roleId) {
+  console.log("update these", employeeId, roleId);
+  db.query(
+    `UPDATE employee SET ? WHERE ?`,
+    [
+      {
+        role_id: roleId,
+      },
+      {
+        id: employeeId,
+      },
+    ],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      }
+      console.log(chalk.green.bold(`Updated Employee role successfully`, "\n"));
+      // Show main menu
+      mainMenu();
+    }
+  );
+}
+
 // Make array of departments
 const createDepartmentArray = () => {
   const departmentArray = [];
@@ -338,21 +400,16 @@ const createRoleArray = () => {
 };
 
 // Make array of roles
-const createManagerArray = () => {
-  const managerArray = [];
+const createEmployeeArray = () => {
+  const employeeArray = [];
   db.query(`SELECT * FROM employee`, function (err, results) {
     results.forEach((employee) => {
-      managerArray.push(
+      employeeArray.push(
         `${employee.id}: ${employee.first_name} ${employee.last_name}`
       );
     });
   });
-  return managerArray;
-};
-
-// Update an employee role
-const updateEmployeeRole = () => {
-  //
+  return employeeArray;
 };
 
 // Update employee manager
