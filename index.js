@@ -358,7 +358,6 @@ const updateEmployeeRole = async () => {
 
 // Push role change to database
 function updateRole(employeeId, roleId) {
-  console.log("update these", employeeId, roleId);
   db.query(
     `UPDATE employee SET ? WHERE ?`,
     [
