@@ -40,7 +40,13 @@ When the application has started the user is presented with the main menu. The m
 - Update an employee role allows the user to change the role of an employee.
 - View budgets allows the user to view the budget utilised based on department or job role.
 
+### Video
+
 A video walkthrough of how to use this application is available here: [Video](https://drive.google.com/file/d/1lwcOoLtF27tyqnO0zKdTc_1P_oJMbIhE/view?usp=sharing)
+
+### Screenshot
+
+![Screenshot of the application](./assets/employee-tracker.png)
 
 ## License
 
